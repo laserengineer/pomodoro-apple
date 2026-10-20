@@ -17,7 +17,8 @@ export function IconButton({ children, onClick, title, dim }: Props): React.JSX.
       transition={tapSpring}
       onClick={onClick}
       title={title}
-      className="text-lg outline-none"
+      aria-label={title}
+      className="flex h-6 w-6 items-center justify-center rounded-full outline-none"
       style={{ opacity: dim ? 0.4 : 1 }}
     >
       {children}

@@ -17,3 +17,13 @@ body,
 /* 无边框窗口的拖动区域,以及其中不能拖动的控件 */
 .drag { -webkit-app-region: drag; }
 .no-drag { -webkit-app-region: no-drag; }
+
+/* 键盘焦点环:按钮上的 outline-none 只去掉默认样式,这里按需补回可见焦点 */
+button:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; }
+}

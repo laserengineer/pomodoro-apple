@@ -19,6 +19,15 @@ const START_LABEL: Record<Status, string> = { idle: '开始', running: '暂停',
 
 const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
+// 顶栏线性图标:跟随文字颜色,线宽统一
+function Icon({ children }: { children: React.ReactNode }): React.JSX.Element {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      {children}
+    </svg>
+  )
+}
+
 function App(): React.JSX.Element {
   const { mode, status, text, progress, done, toggle, reset, selectMode } = useTimer()
   // 整个界面:完全不透明(0% 透明) / 半透明毛玻璃
@@ -57,27 +66,38 @@ function App(): React.JSX.Element {
           transition={{ duration: 0.8 }}
           className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full opacity-40 blur-3xl"
         />
-        <div aria-hidden className="pointer-events-none absolute -bottom-20 -right-16 h-64 w-64 rounded-full bg-[#BF5AF2] opacity-25 blur-3xl" />
 
         {/* 顶栏:可拖动区域;左侧红黄绿灯,右侧置顶与主题切换 */}
         <div className="drag relative flex items-center justify-between px-5 pt-4">
           <div className="no-drag flex gap-2">
-            <button onClick={() => window.api.close()} title="关闭(隐藏到托盘,计时继续)" className="h-3 w-3 rounded-full bg-[#FF5F57] outline-none transition-transform hover:scale-125" />
-            <button onClick={() => window.api.minimize()} title="最小化" className="h-3 w-3 rounded-full bg-[#FEBC2E] outline-none transition-transform hover:scale-125" />
+            <button onClick={() => window.api.close()} title="关闭(隐藏到托盘,计时继续)" aria-label="关闭" className="h-3 w-3 rounded-full bg-[#FF5F57] outline-none transition-transform hover:scale-125" />
+            <button onClick={() => window.api.minimize()} title="最小化" aria-label="最小化" className="h-3 w-3 rounded-full bg-[#FEBC2E] outline-none transition-transform hover:scale-125" />
             {/* 绿灯:切换界面 完全不透明 / 半透明。实心=不透明,淡色=半透明 */}
             <button
               onClick={() => setOpaque((v) => !v)}
               title={opaque ? '当前:不透明(点击切换为半透明)' : '当前:半透明(点击切换为不透明)'}
+              aria-label="切换不透明/半透明"
               className="h-3 w-3 rounded-full bg-[#28C840] outline-none transition-all hover:scale-125"
               style={{ opacity: opaque ? 1 : 0.4 }}
             />
           </div>
           <div className="no-drag flex items-center gap-3">
             <IconButton onClick={() => setPinned((v) => !v)} title={pinned ? '取消置顶' : '窗口置顶'} dim={!pinned}>
-              📌
+              <Icon>
+                <path d="M9 4h6l-1 6 3 3H7l3-3-1-6zM12 13v7" />
+              </Icon>
             </IconButton>
             <IconButton onClick={() => window.api.setTheme(dark ? 'light' : 'dark')} title="切换深色/浅色">
-              {dark ? '☀️' : '🌙'}
+              <Icon>
+                {dark ? (
+                  <>
+                    <circle cx="12" cy="12" r="4" />
+                    <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4" />
+                  </>
+                ) : (
+                  <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />
+                )}
+              </Icon>
             </IconButton>
           </div>
         </div>
@@ -108,7 +128,7 @@ function App(): React.JSX.Element {
                 transition={spring}
                 className="text-center"
               >
-                <div className="text-[56px] font-light leading-none tracking-tight tabular-nums">{text}</div>
+                <div className="text-[60px] font-extralight leading-none tracking-tighter tabular-nums">{text}</div>
                 <div className="mt-2 text-sm opacity-60">{MODE_LABELS[mode]}</div>
                 {/* 本组专注的完成进度 */}
                 <div className="mt-3 flex justify-center gap-1.5">
