@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 窗口本身是透明/亚克力材质,页面背景必须透明才能透出毛玻璃 */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 无边框窗口的拖动区域,以及其中不能拖动的控件 */
+.drag { -webkit-app-region: drag; }
+.no-drag { -webkit-app-region: no-drag; }
