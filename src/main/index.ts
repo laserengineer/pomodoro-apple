@@ -102,6 +102,9 @@ if (!app.requestSingleInstanceLock()) {
   app.whenReady().then(() => {
     electronApp.setAppUserModelId('com.pomodoro.apple')
 
+    // 默认深色,不再跟随系统;仍可用界面右上角的按钮临时切换
+    nativeTheme.themeSource = 'dark'
+
     app.on('browser-window-created', (_, window) => {
       optimizer.watchWindowShortcuts(window)
     })
